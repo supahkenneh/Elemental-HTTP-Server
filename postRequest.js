@@ -1,6 +1,7 @@
 const public = "./public";
 const fs = require('fs');
 const qs = require('querystring');
+const buildPage = require(`./elementTemplate`);
 
 function postReq(request, response) {
 
@@ -18,23 +19,7 @@ function postReq(request, response) {
       let newFile = `${parsedData.elementName.toLowerCase()}.html`
       generateLinks((list, numOfElems) => {
 
-        let newDoc = `<!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <title>The Elements - ${parsedData.elementName}</title>
-      <link rel="stylesheet" href="/css/styles.css">
-    </head>
-    <body>
-      <h1>${parsedData.elementName}</h1>
-      <h2>${parsedData.atomicSymbol}</h2>
-      <h3>Atomic number ${parsedData.atomicNum}</h3>
-      <p>${parsedData.description}</p>
-      <p><a href="/">back</a></p>
-    </body>
-    </html>`
-
-        let updatedIndex = `<!DOCTYPE html>
+      let updatedIndex = `<!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
@@ -50,8 +35,8 @@ function postReq(request, response) {
       </ol>
     </body>
     </html>`
-        
-        fs.writeFile(`${public}/${newFile}`, newDoc, (err) => {
+
+        fs.writeFile(`${public}/${newFile}`, buildPage.buildHTMLPage(parsedData), (err) => {
           if (err) {
             console.log(err);
           } else {
