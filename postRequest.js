@@ -64,7 +64,9 @@ function generateLinks(cb) {
   fs.readdir(`${public}`, (err, data) => {
     for (let i = 1; i < data.length; i++) {
       if (data[i] !== `css` && data[i] !== `index.html` && data[i] !== `404.html`) {
-        elementList = elementList.concat(`<li><a href="/${data[i]}.html">${data[i]}</a></li>\n`);
+        let dot = data[i].lastIndexOf('.');
+        let justName = data[i].substring(0, dot);
+        elementList = elementList.concat(`<li><a href="/${justName}.html">${justName}</a></li>\n`);
       }
     }
     let numOfElems = data.length - 4;
