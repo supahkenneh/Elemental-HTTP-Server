@@ -1,6 +1,7 @@
 const http = require('http');
 const get = require('./getRequest');
 const post = require('./postRequest');
+const put = require('./putRequest');
 const port = process.env.port || 3005;
 
 const server = http.createServer((request, response) => {
@@ -16,7 +17,7 @@ const server = http.createServer((request, response) => {
     post.postReq(request, response);
     break;
     case 'PUT':
-    // putReq (request, response);
+    put.putReq(request, response);
     break;
   }
 })
