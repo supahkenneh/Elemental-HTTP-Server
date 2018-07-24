@@ -3,6 +3,7 @@ const fs = require('fs');
 const qs = require('querystring');
 const port = process.env.port || 3005;
 const public = "./public";
+const elemArr = ['hydrogen', 'helium'];
 
 const server = http.createServer((request, response) => {
   console.log('Incoming request');
@@ -57,12 +58,11 @@ function getReq(fileURL, response) {
 };
 
 function postReq (request, response) {
-  let numElements = 2;
   
   request.on('data', (data) => {
     let parsedData = qs.parse(data.toString());
     let newFile = `${request.url.substring(1, request.url.length)}`
-    numElements++;
+    elemArr.push(parsedData.name.toLowerCase());
   
     let newDoc = `<!DOCTYPE html>
     <html lang="en">
@@ -90,15 +90,9 @@ function postReq (request, response) {
     <body>
       <h1>The Elements</h1>
       <h2>These are all the known elements.</h2>
-      <h3>These are ${numElements}</h3>
+      <h3>These are ${elemArr.length}</h3>
       <ol>
-        <li>
-          <a href="/hydrogen.html">Hydrogen</a>
-        </li>
-        <li>
-          <a href="/helium.html">Helium</a>
-        </li>
-          ${generateLink(newFile, parsedData.name)}   
+      ${generateLinks()}
       </ol>
     </body>
     </html>`
@@ -127,9 +121,11 @@ function postReq (request, response) {
   });
 }
 
-function generateLink(url, name) {
-  return `<li>
-<a href="/${url}">${name}</a>
-</li>`
+function generateLinks() {
+  let elementList = '';
+  for (let i = 0; i < elemArr.length; i++) {
+    elementList = elementList.concat(`<li><a href="/${elemArr[i]}.html">${elemArr[i]}</a></li>\n`);
+  }
+  return elementList;
 }
 
