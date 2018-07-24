@@ -16,18 +16,18 @@ function postReq(request, response) {
   } else {
     request.on('data', (data) => {
       let parsedData = qs.parse(data.toString());
-      let newFile = `${parsedData.name}.html`
-      elemArr.push(parsedData.name.toLowerCase());
+      let newFile = `${parsedData.elementName.toLowerCase()}.html`
+      elemArr.push(parsedData.elementName.toLowerCase());
 
       let newDoc = `<!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
-      <title>The Elements - ${parsedData.name}</title>
+      <title>The Elements - ${parsedData.elementName}</title>
       <link rel="stylesheet" href="/css/styles.css">
     </head>
     <body>
-      <h1>${parsedData.name}</h1>
+      <h1>${parsedData.elementName}</h1>
       <h2>${parsedData.atomicSymbol}</h2>
       <h3>Atomic number ${parsedData.atomicNum}</h3>
       <p>${parsedData.description}</p>
