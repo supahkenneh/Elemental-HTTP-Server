@@ -9,7 +9,6 @@ const server = http.createServer((request, response) => {
   console.log('Incoming request');
   let method = request.method;
   let url = request.url;
-  //if request method is GET...
   switch(method) {
     case 'GET':
     get.getReq(url, response);
@@ -22,6 +21,10 @@ const server = http.createServer((request, response) => {
     break;
     case 'DELETE':
     del.delReq(request, response);
+    break;
+    default:
+    response.writeHead(405, { 'Error' : 'Method not allowed' });
+    response.end();
     break;
   }
 })
