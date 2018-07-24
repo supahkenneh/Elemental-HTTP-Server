@@ -8,9 +8,9 @@ function putReq(request, response) {
 
     if (err) {
       
-      fs.writeHead(500, {'Content-Type' : 'application/json', 'Content-Body' : `{ "error" : "resource/ ${request.url} does not exist!}`});
-      throw 'No such file in directory';
-
+      response.writeHead(500, {'Content-Type' : 'application/json' });
+      response.end(JSON.stringify({ "error" : `resource/ ${request.url} does not exist!`} ));
+      
     } else {
 
       request.on('data', (data) => {
@@ -18,8 +18,8 @@ function putReq(request, response) {
         let parsedData = qs.parse(data.toString());
         fs.writeFile(`${public}/${request.url}`, buildPage.buildHTMLPage(parsedData), () => {
           
-          response.writeHead(200, { 'Content-Type': 'application/json', 'Content-Body': '{ "success" : true}' });
-          response.end(() => {
+          response.writeHead(200, { 'Content-Type': 'application/json'});
+          response.end(JSON.stringify({ "success" : true }), () => {
             console.log('Put request complete');
           })
         });
