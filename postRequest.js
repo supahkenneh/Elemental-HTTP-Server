@@ -16,8 +16,9 @@ function postReq(request, response) {
     request.on('data', (data) => {
       let parsedData = qs.parse(data.toString());
       let newFile = `${parsedData.elementName.toLowerCase()}.html`
+      generateLinks((list, numOfElems) => {
 
-      let newDoc = `<!DOCTYPE html>
+        let newDoc = `<!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
@@ -34,58 +35,55 @@ function postReq(request, response) {
     </html>`
 
         let updatedIndex = `<!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <title>The Elements</title>
-        <link rel="stylesheet" href="/css/styles.css">
-      </head>
-      <body>
-        <h1>The Elements</h1>
-        <h2>These are all the known elements.</h2>
-        <h3>These are 3</h3>
-        <ol>
-        ${generateLinks()}
-        </ol>
-      </body>
-      </html>`
-
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title>The Elements</title>
+      <link rel="stylesheet" href="/css/styles.css">
+    </head>
+    <body>
+      <h1>The Elements</h1>
+      <h2>These are all the known elements.</h2>
+      <h3>These are ${numOfElems}</h3>
+      <ol>
+      ${list}
+      </ol>
+    </body>
+    </html>`
+        
         fs.writeFile(`${public}/${newFile}`, newDoc, (err) => {
           if (err) {
             console.log(err);
           } else {
-            response.writeHead(200, { 'Content-Type': 'application/json', 'Content-Body': '{ "success" : true }' });
-            response.end(() => {
-              console.log('Write successful');
+            fs.writeFile(`${public}/index.html`, updatedIndex, (err) => {
+              if (err) {
+                console.log(err);
+              } else {
+                response.writeHead(200, { 'Content-Type': 'application/json' });
+                response.end(JSON.stringify({ "success": true }), () => {
+                  console.log('Write successful, Index Updated');
+                });
+              }
             })
           }
         })
-
-        fs.writeFile(`${public}/index.html`, updatedIndex, (err) => {
-          if (err) {
-            console.log(err);
-          } else {
-            response.writeHead(200, { 'Content-Type': 'application/json', 'Content-Body': '{ "success" : true }' });
-            response.end(() => {
-              console.log('Index Updated');
-            })
-          }
-        })
+      })
     });
   }
 }
-function generateLinks() {
+
+//creates list elements
+function generateLinks(cb) {
   let elementList = '';
   fs.readdir(`${public}`, (err, data) => {
-    if (err) throw err;
-    for (let i = 2; i < data.length; i++) {
-      if (data[i] !== `index.html` || data[i] !== `css` || data[i] !== `404.html`){
+    for (let i = 1; i < data.length; i++) {
+      if (data[i] !== `css` && data[i] !== `index.html` && data[i] !== `404.html`) {
         elementList = elementList.concat(`<li><a href="/${data[i]}.html">${data[i]}</a></li>\n`);
-        console.log(elementList);
       }
     }
+    let numOfElems = data.length - 4;
+    return cb(elementList, numOfElems);
   });
-  return elementList;
 }
 
 module.exports = {
