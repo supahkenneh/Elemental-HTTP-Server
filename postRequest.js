@@ -17,6 +17,7 @@ function postReq(request, response) {
     request.on('data', (data) => {
       let parsedData = qs.parse(data.toString());
       let newFile = `${parsedData.elementName.toLowerCase()}.html`
+      //called here to allow for asynchronous function to run (write to index.html) before response.end()
       generateLinks((list, numOfElems) => {
 
       let updatedIndex = `<!DOCTYPE html>
