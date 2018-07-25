@@ -8,9 +8,9 @@ function putReq(request, response) {
 
     if (err) {
       
-      response.writeHead(500, {'Content-Type' : 'application/json' });
+      response.writeHead(404, {'Content-Type' : 'application/json' });
       response.end(JSON.stringify({ "error" : `resource/ ${request.url} does not exist!`} ));
-      
+
     } else {
 
       request.on('data', (data) => {
@@ -28,6 +28,4 @@ function putReq(request, response) {
   })
 }
 
-module.exports = {
-  putReq: putReq,
-}
+module.exports = putReq;

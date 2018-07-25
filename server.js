@@ -11,16 +11,16 @@ const server = http.createServer((request, response) => {
   let url = request.url;
   switch(method) {
     case 'GET':
-    get.getReq(url, response);
+    get(url, response);
     break;
     case 'POST':
-    post.postReq(request, response);
+    post(request, response);
     break;
     case 'PUT':
-    put.putReq(request, response);
+    put(request, response);
     break;
     case 'DELETE':
-    del.delReq(request, response);
+    del(request, response);
     break;
     default:
     response.writeHead(405, { 'Error' : 'Method not allowed' });

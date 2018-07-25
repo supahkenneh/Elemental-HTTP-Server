@@ -5,7 +5,7 @@ const buildPage = require(`./elementTemplate`);
 
 function postReq(request, response) {
 
-  if (!request.url.substring(1, request.url.length) || request.url.substring(1, request.url.length) !== 'elements') {
+  if (request.url !== '/elements') {
     fs.readFile(`${public}/404.html`, (err, data) => {
       response.writeHead(404, { 'Content': 'Not Found' })
       response.write(data.toString().trim());
@@ -74,6 +74,4 @@ function generateLinks(cb) {
   });
 }
 
-module.exports = {
-  postReq: postReq,
-}
+module.exports = postReq;
